@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import ErrorHandler from "../middlewares/error.js";
 import { sendCookie } from "../utility/features.js";
 
-export const register = async (req, res) => {
+export const register = async (req, res,next) => {
   try {
     const { name, email, password } = req.body;
 
@@ -16,7 +16,7 @@ export const register = async (req, res) => {
     user = await User.create({ name, email, password: hashPassword });
     sendCookie(user, res, "Registered Successfully", 201);
   } catch (error) {
-    res.json(error);
+    next(error);
   }
 };
 
@@ -27,7 +27,7 @@ export const getMyProfile = (req, res) => {
   });
 };
 
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res,next) => {
   try {
     const { email, password } = req.body;
 
@@ -44,7 +44,7 @@ export const loginUser = async (req, res) => {
     }
     sendCookie(user, res , `Welcome back, ${user.name}`, 200);
   } catch (error) {
-    res.json(error);
+    next(error)
   }
 };
 
